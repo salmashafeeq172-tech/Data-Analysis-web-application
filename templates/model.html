@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Model Training</title>
+     <link rel="stylesheet" href="static\style.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="navbar">
+  <h2>Data Analysis App</h2>
+  <div>
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('eda') }}">EDA</a>
+    <a href="{{ url_for('plot') }}">Plot</a>
+    <a href="{{ url_for('model_train') }}">Model</a>
+    <a href="{{ url_for('predict') }}">Predict</a>
+    <button id="theme-toggle">🌓</button>
+  </div>
+</div>
+
+    <h2>Train Model</h2>
+    <form method="post">
+        <label>Select Target Column:</label>
+        <select name="target">
+            {% for col in columns %}
+            <option value="{{ col }}">{{ col }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label>Select Model:</label>
+        <select name="model_type">
+            <option value="linear">Linear Regression</option>
+            <option value="rf">Random Forest</option>
+        </select><br><br>
+
+        <button type="submit">Train Model</button>
+    </form>
+    {% if preprocess_summary %}
+  <h3>🧮 Preprocessing Summary</h3>
+  <p>This table shows what data cleaning and encoding steps were automatically applied before model training.</p>
+  {{ preprocess_summary | safe }}
+{% endif %}
+
+
+    {% if message %}
+    <h3>{{ message }}</h3>
+    <a href="/predict">Go to Prediction</a>
+    {% endif %}
+
+    {% if plots %}
+    <h3>Model Evaluation</h3>
+    {% for plot in plots %}
+        <div>{{ plot|safe }}</div><br>
+    {% endfor %}
+    {% endif %}
+    <script>
+const toggleButton = document.getElementById('theme-toggle');
+const body = document.body;
+
+// Load user preference
+if (localStorage.getItem('theme') === 'dark') {
+  body.classList.add('dark');
+}
+
+toggleButton.addEventListener('click', () => {
+  body.classList.toggle('dark');
+  const theme = body.classList.contains('dark') ? 'dark' : 'light';
+  localStorage.setItem('theme', theme);
+});
+</script>
+
+</body>
+</html>

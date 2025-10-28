@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive Plotting</title>
+    <link rel="stylesheet" href="static\style.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="navbar">
+  <h2>Data Analysis App</h2>
+  <div>
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('eda') }}">EDA</a>
+    <a href="{{ url_for('plot') }}">Plot</a>
+    <a href="{{ url_for('model_train') }}">Model</a>
+    <a href="{{ url_for('predict') }}">Predict</a>
+    <button id="theme-toggle">🌓</button>
+  </div>
+</div>
+
+ 
+<div class="container mt-4">
+  <h2>Interactive Plot</h2>
+  <form method="POST">
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label>X-axis</label>
+        <select name="x_col" id="x_col" class="form-select" required>
+          {% for col in columns %}
+          <option value="{{ col }}">{{ col }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label>Y-axis</label>
+        <select name="y_col" id="y_col" class="form-select">
+          <option value="">None</option>
+          {% for col in columns %}
+          <option value="{{ col }}">{{ col }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label>Plot Type</label>
+        <select name="plot_type" class="form-select" required>
+          <option value="scatter">Scatter</option>
+          <option value="line">Line</option>
+          <option value="bar">Bar</option>
+          <option value="hist">Histogram</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label>Color</label>
+        <input type="color" name="color" class="form-control" value="#007bff">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Generate Plot</button>
+  </form>
+
+  {% if plot_div %}
+  <div class="mt-4">{{ plot_div | safe }}</div>
+  {% endif %}
+</div>
+
+<script>
+  const xSelect = document.getElementById("x_col");
+  const ySelect = document.getElementById("y_col");
+
+  xSelect.addEventListener("change", function() {
+    const selectedX = this.value;
+    for (const option of ySelect.options) {
+      option.disabled = (option.value === selectedX);
+    }
+  });
+</script>
+
+
+
+</body>
+</html>

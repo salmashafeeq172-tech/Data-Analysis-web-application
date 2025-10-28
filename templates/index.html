@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload File</title>
+    <link rel="stylesheet" href="static\style.css">
+</head>
+<body>
+    <div class="navbar">
+  <h2>Data Analysis App</h2>
+  <div>
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('eda') }}">EDA</a>
+    <a href="{{ url_for('plot') }}">Plot</a>
+    <a href="{{ url_for('model_train') }}">Model</a>
+    <a href="{{ url_for('predict') }}">Predict</a>
+    <button id="theme-toggle">🌓</button>
+  </div>
+</div>
+
+    <h2>Upload CSV/Excel File</h2>
+    <form action="/" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" required>
+        <button type="submit">Upload</button>
+    </form>
+    <script>
+const toggleButton = document.getElementById('theme-toggle');
+const body = document.body;
+
+// Load user preference
+if (localStorage.getItem('theme') === 'dark') {
+  body.classList.add('dark');
+}
+
+toggleButton.addEventListener('click', () => {
+  body.classList.toggle('dark');
+  const theme = body.classList.contains('dark') ? 'dark' : 'light';
+  localStorage.setItem('theme', theme);
+});
+</script>
+
+</body>
+</html>
+

@@ -1,0 +1,6 @@
+Flask
+pandas
+plotly
+scikit-learn
+openpyxl
+joblib

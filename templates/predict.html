@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction</title>
+    <link rel="stylesheet" href="static\style.css">
+</head>
+<body>
+    <div class="navbar">
+  <h2>Data Analysis App</h2>
+  <div>
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('eda') }}">EDA</a>
+    <a href="{{ url_for('plot') }}">Plot</a>
+    <a href="{{ url_for('model_train') }}">Model</a>
+    <a href="{{ url_for('predict') }}">Predict</a>
+    <button id="theme-toggle">🌓</button>
+  </div>
+</div>
+
+
+<div class="container mt-4">
+  <h2>Predict with Trained Model</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="action" value="manual">
+    <h5>Manual Input</h5>
+
+    <div class="row">
+      {% for feature in features %}
+      <div class="col-md-3 mb-3">
+        <label>{{ feature }}</label>
+        {% if feature_values[feature] %}
+        <select name="{{ feature }}" class="form-select">
+          {% for val in feature_values[feature] %}
+          <option value="{{ val }}">{{ val }}</option>
+          {% endfor %}
+        </select>
+        {% else %}
+        <input type="number" step="any" name="{{ feature }}" class="form-control" required>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-success">Predict</button>
+  </form>
+
+  {% if prediction %}
+  <div class="alert alert-info mt-3">
+    <strong>Prediction:</strong> {{ prediction }}
+  </div>
+  {% endif %}
+
+  <hr>
+
+  <h5>Upload Test File</h5>
+  <form method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="action" value="file">
+    <input type="file" name="file" class="form-control mb-3" required>
+    <button type="submit" class="btn btn-primary">Predict from File</button>
+  </form>
+
+  {% if results_table %}
+  <div class="mt-4">
+    <h5>Predicted Results</h5>
+    {{ results_table | safe }}
+    {% if download_link %}
+    <a href="{{ download_link }}" class="btn btn-secondary mt-2">Download Predictions</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+
+
+    <script>
+const toggleButton = document.getElementById('theme-toggle');
+const body = document.body;
+
+// Load user preference
+if (localStorage.getItem('theme') === 'dark') {
+  body.classList.add('dark');
+}
+
+toggleButton.addEventListener('click', () => {
+  body.classList.toggle('dark');
+  const theme = body.classList.contains('dark') ? 'dark' : 'light';
+  localStorage.setItem('theme', theme);
+});
+</script>
+
+</body>
+</html>
